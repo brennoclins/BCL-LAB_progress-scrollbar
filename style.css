@@ -1,0 +1,32 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  padding: 0 2.5em 2em;
+  line-height: 1.85;
+  font-size: 2.525vmax;
+  margin: 0 2em;
+  background-color: #9E9E9E;
+  color: rgba(0, 0, 0, 0.5);
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-style: italic;
+}
+body::-webkit-scrollbar {
+  width: 1em;
+  z-index: 100;
+  background-color: #9E9E9E;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: rebeccapurple;
+  border-width: 2px 0 2px;
+  border-style: solid;
+  border-color: #3d1d5b;
+  box-shadow: 0 -100vh 0 100vh #00ffac;
+}
+
+h1 {
+  line-height: 1.75;
+  font-size: 1.75em;
+}

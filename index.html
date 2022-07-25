@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
+  <title>BCL-LAB - Progress Scrollbar</title>
+</head>
+
+<body>
+  <main>
+    <section>
+      <h1>BCL-LAB - Progress Scrollbar</h1>
+    </section>
+    <section class="lorem">
+      <h1>Instalando driver nvidia no F36 com Boot Seguro ativo</h1>
+      <h2>
+        1-)Instale o mokutil and openssl
+      </h2>
+      <p>
+        sudo dnf install mokutil openssl
+      </p>
+
+      <h2>
+        2-)Gere as chaves de assinatura
+      </h2>
+      <p>
+        sudo openssl req -new -x509 -newkey rsa:2048 -keyout ~/nvidia_driver-signing.key -outform
+        DER -out ~/nvidia_driver-signing.der -nodes -days 36500 -subj "/CN=Nvidia Video Driver
+        Signing"
+      </p>
+
+      <h2>
+        3-)Instale o key enrollment, esse processo vai pedir para gerar uma senha que
+        sera usada na inicialização para instalar os certificados
+      </h2>
+      <p>
+        sudo mokutil --import ~/nvidia_driver-signing.der
+      </p>
+
+      <h2>
+        4-)Reinicie o sistema e entre no enroll the key
+      </h2>
+      <p>
+        sudo reboot
+      </p>
+
+      <h2>
+        5-)Enroll the key
+      </h2>
+      <ul>
+        <li>
+          - Após a reinicialização, você verá a interface do MOK Manager e será solicitado a registrar a
+          chave. É aqui que vamos usar a senha que cadastramos na criação das CHAVES no passo 3
+          desse tutorial
+        </li>
+        <li>
+          - Primeiro selecione “Enroll MOK“.
+        </li>
+        <li>
+          - Em seguida, "Continuw".
+        </li>
+        <li>
+          - Clique em “Yes” e digite a senha.
+        </li>
+        <li>
+          - Em seguida, selecione "OK" e seu dispositivo será reinicializado novamente
+        </li>
+      </ul>
+
+      <h2>
+        6-)Instale kmodtool and akmods
+      </h2>
+      <p>
+        sudo dnf update –refresh
+      </p>
+      <p>
+        sudo dnf install kmodtool akmods
+      </p>
+
+      <h2>
+        7-)Mova as chaves que criamos para as pastas especificas no sistema
+      </h2>
+        <p>
+        sudo mv ~/nvidia_driver-signing.der /etc/pki/akmods/certs/nvidia_driver-signing.der
+        </p>
+        <p>
+          sudo su
+        </p>
+        
+        <p>
+          cd etc/pki/akmods/certs/
+        </p>
+
+        <p>
+          chown root:akmods nvidia_driver-signing.derchmod 640 nvidia_driver-signing.der
+        </p>
+          
+        <p>
+          ln -s nvidia_driver-signing.der public_key.der
+        </p>
+        
+        <p>
+          cd /etc/pki/akmods/private/
+        </p>
+      
+        <p>
+          mv /home/bcl-lab/nvidia_driver-signing.key /etc/pki/akmods/private/nvidia_driver-signing.priv
+        </p>
+          
+        <p>
+          chown root:akmods nvidia_driver-signing.priv
+        </p>   
+              
+        <p>
+          chmod 640 nvidia_driver-signing.priv
+        </p>
+
+        <p>
+          ln -s nvidia_driver-signing.priv private_key.priv
+        </p>
+
+      <h2>
+        8-)Instale os drivers da Nvidia
+      </h2>
+
+      <p>
+        sudo dnf install gcc kernel-headers kernel-devel akmod-nvidia kmod-nvidia nvidia-modprobe
+        nvidia-persistenced nvidia-settings nvidia-texture-tools nvidia-xconfig xorg-x11-drv-nvidia
+        xorg-x11-drv-nvidia-cuda-libs xorg-x11-drv-nvidia-kmodsrc xorg-x11-drv-nvidia-libs xorg-
+        x11-drv-nvidia-libs xorg-x11-drv-nvidia-power
+      </p>
+
+      <h2>
+        9-) Certifique-se de que os módulos do kernel foram compilados
+      </h2>
+
+      <p>
+        sudo akmods --force
+      </p>
+
+      <h2>
+        10-)Verifique se a imagem de inicialização também foi atualizada
+      </h2>
+      <p>
+        sudo dracut --force
+      </p>
+
+      <h2>
+        11-)Reboot your device
+      </h2>
+
+      <p>
+        sudo reboot
+      </p>
+    </section>
+  </main>
+</body>
+
+</html>
